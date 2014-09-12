@@ -1,0 +1,75 @@
+{
+   "abstract" : "Library for One Time Password Server",
+   "author" : [
+      "ritou <ritou.06@gmail.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v2.1.1, CPAN::Meta::Converter version 2.142060",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Net-OATH-Server",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.035"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Authen::OATH" : "v1.0.0",
+            "Class::Accessor::Fast" : "0.34",
+            "Convert::Base32" : "0.06",
+            "JSON::XS" : "3.01",
+            "Params::Validate" : "1.13",
+            "Plack" : "1.0031",
+            "perl" : "5.008001"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Crypt::OpenSSL::Random" : "0.04",
+            "Test::MockTime" : "0.13",
+            "Test::More" : "0.98"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ritou/p5-net-oath-server/issues"
+      },
+      "homepage" : "https://github.com/ritou/p5-net-oath-server",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/ritou/p5-net-oath-server.git",
+         "web" : "https://github.com/ritou/p5-net-oath-server"
+      }
+   },
+   "version" : "0.01"
+}
