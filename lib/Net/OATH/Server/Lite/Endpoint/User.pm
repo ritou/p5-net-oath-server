@@ -12,6 +12,7 @@ use JSON::XS qw/decode_json encode_json/;
 use Convert::Base32 qw/encode_base32/;
 
 use Net::OATH::Server::Lite::Error;
+use Net::OATH::Server::Lite::User;
 
 sub new {
     my $class = shift;
@@ -89,93 +90,19 @@ sub handle_request {
 
         my $user;
         if ($content->{method} eq q{create}) {
-            if ($content->{id}) {
-                Net::OATH::Server::Lite::Error->throw();
-            } else {
-                $user = Net::OATH::Server::Lite::Model::User->new(
-                   id => $data_handler->create_id(),
-                   secret => $data_handler->create_secret(),
-                );
-
-                $user->type($content->{type}) if $content->{type};
-                $user->algorithm($content->{algorithm}) if $content->{algorithm};
-                $user->digits($content->{digits}) if $content->{digits};
-                $user->counter($content->{counter}) if $content->{counter};
-                $user->period($content->{period}) if $content->{period};
-                Net::OATH::Server::Lite::Error->throw() unless $user->is_valid;
-
-                unless ($data_handler->insert_user($user)) {
-                    Net::OATH::Server::Lite::Error->throw(
-                        code => 500,
-                        error => q{server_error},
-                    );
-                }
-
-                $code = 201;
-            }
+            ($code, $user) = Net::OATH::Server::Lite::User->create($data_handler, $content);
         }
 
         if ($content->{method} eq q{read}) {
-            if ($content->{id}) {
-                $user = $data_handler->select_user($content->{id}) or
-                        Net::OATH::Server::Lite::Error->throw(
-                            code => 404,
-                            description => q{invalid id},
-                        );
-            } else {
-                Net::OATH::Server::Lite::Error->throw(
-                    description => q{missing id},
-                );
-            }
+            ($code, $user) = Net::OATH::Server::Lite::User->read($data_handler, $content);
         }
 
         if ($content->{method} eq q{update}) {
-            if ($content->{id}) {
-                $user = $data_handler->select_user($content->{id}) or
-                        Net::OATH::Server::Lite::Error->throw(
-                            code => 404,
-                            description => q{invalid id},
-                        );
-
-                $user->type($content->{type}) if $content->{type};
-                $user->algorithm($content->{algorithm}) if $content->{algorithm};
-                $user->digits($content->{digits}) if $content->{digits};
-                $user->counter($content->{counter}) if $content->{counter};
-                $user->period($content->{period}) if $content->{period};
-                Net::OATH::Server::Lite::Error->throw() unless $user->is_valid;
-
-                unless ($data_handler->update_user($user)) {
-                    Net::OATH::Server::Lite::Error->throw(
-                        code => 500,
-                        error => q{server_error},
-                    );
-                }
-            } else {
-                Net::OATH::Server::Lite::Error->throw(
-                    description => q{missing id},
-                );
-            }
+            ($code, $user) = Net::OATH::Server::Lite::User->update($data_handler, $content);
         }
 
         if ($content->{method} eq q{delete}) {
-            if ($content->{id}) {
-                $user = $data_handler->select_user($content->{id}) or
-                        Net::OATH::Server::Lite::Error->throw(
-                            code => 404,
-                            description => q{invalid id},
-                        );
-
-                unless ($data_handler->delete_user($user->id)) {
-                    Net::OATH::Server::Lite::Error->throw(
-                        code => 500,
-                        error => q{server_error},
-                    );
-                }
-            } else {
-                Net::OATH::Server::Lite::Error->throw(
-                    description => q{missing id},
-                );
-            }
+            ($code, $user) = Net::OATH::Server::Lite::User->delete($data_handler, $content);
         }
 
         my $params = ($content->{method} eq q{delete}) ? {} :
