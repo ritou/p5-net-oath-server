@@ -16,7 +16,10 @@ my %DIGEST_MAP = (
 sub is_valid_user {
     my ($self, $data_handler, $params) = @_;
 
-    # TODO: validate
+    Net::OATH::Server::Lite::Error->throw(
+        code => 500,
+        error => q{server_error},
+    ) unless ($data_handler && $data_handler->isa(q{Net::OATH::Server::Lite::DataHandler}));
 
     # Params
     my $id = $params->{id} or
